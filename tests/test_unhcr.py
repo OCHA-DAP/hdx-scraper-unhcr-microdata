@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
-Unit tests for acled.
+Unit tests for UNHCR microdata.
 
 """
 from os.path import join
