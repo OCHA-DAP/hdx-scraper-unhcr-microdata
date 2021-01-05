@@ -103,8 +103,8 @@ def generate_dataset(dataset_id, metadata_url, auth_url, downloader):
     dataset.set_dataset_date(study_info['coll_dates'][0]['start'], study_info['coll_dates'][0]['end'])
 
     resourcedata = {
-        'name': dataset_name,
-        'description': title,
+        'name': title,
+        'description': 'Log in after clicking download link',
         'url': auth_url % dataset_id,
         'format': 'login'
     }

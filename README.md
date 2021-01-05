@@ -1,5 +1,5 @@
 ### Collector for UNHCR's Microdata Datasets
-[![Build Status](https://travis-ci.org/OCHA-DAP/hdx-scraper-unhcr-microdata.svg?branch=master&ts=1)](https://travis-ci.org/OCHA-DAP/hdx-scraper-unhcr-microdata) [![Coverage Status](https://coveralls.io/repos/github/OCHA-DAP/hdx-scraper-unhcr-microdata/badge.svg?branch=master&ts=1)](https://coveralls.io/github/OCHA-DAP/hdx-scraper-unhcr-microdata?branch=master)
+[![Build Status](https://github.com/OCHA-DAP/hdx-scraper-unhcr-microdata/workflows/build/badge.svg)](https://github.com/OCHA-DAP/hdx-scraper-unhcr-microdata/actions?query=workflow%3Abuild) [![Coverage Status](https://coveralls.io/repos/github/OCHA-DAP/hdx-scraper-unhcr-microdata/badge.svg?branch=master&ts=1)](https://coveralls.io/github/OCHA-DAP/hdx-scraper-unhcr-microdata?branch=master)
 
 This script connects to the [UNHCR API](https://microdata.unhcr.org/index.php/api/catalog/) and extracts data dataset by dataset creating them in HDX. The scraper takes around 10 minutes to run and produces no local data (other than state). It runs weekly and resources point to a login form on UNHCR. 
 
