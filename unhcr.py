@@ -100,7 +100,7 @@ def generate_dataset(dataset_id, metadata_url, auth_url, downloader):
     add_tags(study_info.get('keywords', list()), 'keyword')
     dataset.add_tags(tags)
     dataset.clean_tags()
-    dataset.set_dataset_date(study_info['coll_dates'][0]['start'], study_info['coll_dates'][0]['end'])
+    dataset.set_date_of_dataset(study_info['coll_dates'][0]['start'], study_info['coll_dates'][0]['end'])
 
     resourcedata = {
         'name': title,
