@@ -8,6 +8,7 @@ Generates urls from the UNHCR microdata website.
 
 """
 import logging
+from parser import ParserError
 
 from hdx.data.dataset import Dataset
 from hdx.location.country import Country
@@ -100,13 +101,17 @@ def generate_dataset(dataset_id, metadata_url, auth_url, downloader):
     add_tags(study_info.get('keywords', list()), 'keyword')
     dataset.add_tags(tags)
     dataset.clean_tags()
-    dataset.set_date_of_dataset(study_info['coll_dates'][0]['start'], study_info['coll_dates'][0]['end'])
+    try:
+        dataset.set_date_of_dataset(study_info['coll_dates'][0]['start'], study_info['coll_dates'][0]['end'])
+    except ParserError:
+        logger.exception(f'Failure with dataset id: {dataset_id}, title: {title}!')
+        return None
 
     resourcedata = {
         'name': title,
-        'description': 'Log in after clicking download link',
+        'description': 'Clicking "Download" will take you outside HDX where you can request access to this dataset in csv, xlsx, and dta formats',
         'url': auth_url % dataset_id,
-        'format': 'login'
+        'format': 'Web App'
     }
     dataset.add_update_resource(resourcedata)
     return dataset

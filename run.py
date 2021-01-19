@@ -32,8 +32,9 @@ def main():
         logger.info('Number of datasets to upload: %d' % len(dataset_ids))
         for info, dataset_id in progress_storing_tempdir('UNHCR-MICRODATA', dataset_ids, 'id'):
             dataset = generate_dataset(dataset_id['id'], metadata_url, auth_url, downloader)
-            dataset.update_from_yaml()
-            dataset.create_in_hdx(remove_additional_resources=True, hxl_update=False, updated_by_script='HDX Scraper: UNHCR microdata', batch=info['batch'])
+            if dataset:
+                dataset.update_from_yaml()
+                dataset.create_in_hdx(remove_additional_resources=True, hxl_update=False, updated_by_script='HDX Scraper: UNHCR microdata', batch=info['batch'])
 
 
 if __name__ == '__main__':
