@@ -12,6 +12,7 @@ from parser import ParserError
 
 from hdx.data.dataset import Dataset
 from hdx.location.country import Country
+from hdx.utilities.dateparse import parse_date_range
 from slugify import slugify
 
 logger = logging.getLogger(__name__)
@@ -25,7 +26,7 @@ def get_dataset_ids(catalog_url, downloader):
     return [{'id': x['id']} for x in json['result']]
 
 
-def generate_dataset(dataset_id, metadata_url, auth_url, downloader):
+def generate_dataset(dataset_id, metadata_url, auth_url, documentation_url, downloader):
     response = downloader.download(metadata_url % dataset_id)
     json = response.json()
     study_desc = json['study_desc']
@@ -101,17 +102,25 @@ def generate_dataset(dataset_id, metadata_url, auth_url, downloader):
     add_tags(study_info.get('keywords', list()), 'keyword')
     dataset.add_tags(tags)
     dataset.clean_tags()
-    try:
-        dataset.set_date_of_dataset(study_info['coll_dates'][0]['start'], study_info['coll_dates'][0]['end'])
-    except ParserError:
-        logger.exception(f'Failure with dataset id: {dataset_id}, title: {title}!')
-        return None
+    coll_dates = study_info['coll_dates'][0]
+    startdate, _ = parse_date_range(coll_dates['start'])
+    _, enddate = parse_date_range(coll_dates['end'])
+    dataset.set_date_of_dataset(startdate, enddate)
 
     resourcedata = {
         'name': title,
-        'description': 'Clicking "Download" will take you outside HDX where you can request access to this dataset in csv, xlsx, and dta formats',
+        'description': 'Clicking "Download" leads outside HDX where you can request access to the data in csv, xlsx & dta formats',
         'url': auth_url % dataset_id,
-        'format': 'Web App'
+        'format': 'web app'
     }
     dataset.add_update_resource(resourcedata)
+
+    resourcedata = {
+        'name': 'Codebook',
+        'description': "Contains information about the dataset's metadata and data",
+        'url': documentation_url % dataset_id,
+        'format': 'pdf'
+    }
+    dataset.add_update_resource(resourcedata)
+
     return dataset

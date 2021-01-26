@@ -26,12 +26,13 @@ def main():
     configuration = Configuration.read()
     catalog_url = configuration['catalog_url']
     metadata_url = configuration['metadata_url']
+    documentation_url = configuration['documentation_url']
     auth_url = configuration['auth_url']
     with Download() as downloader:
         dataset_ids = get_dataset_ids(catalog_url, downloader)
         logger.info('Number of datasets to upload: %d' % len(dataset_ids))
         for info, dataset_id in progress_storing_tempdir('UNHCR-MICRODATA', dataset_ids, 'id'):
-            dataset = generate_dataset(dataset_id['id'], metadata_url, auth_url, downloader)
+            dataset = generate_dataset(dataset_id['id'], metadata_url, auth_url, documentation_url, downloader)
             if dataset:
                 dataset.update_from_yaml()
                 dataset.create_in_hdx(remove_additional_resources=True, hxl_update=False, updated_by_script='HDX Scraper: UNHCR microdata', batch=info['batch'])

@@ -1,4 +1,5 @@
 # Collector specific configuration
 catalog_url: "https://microdata.unhcr.org/index.php/api/catalog/"
 metadata_url: "https://microdata.unhcr.org/index.php/metadata/export/%s/json"
+documentation_url: "https://microdata.unhcr.org/index.php/catalog/%s/pdf-documentation"
 auth_url: "https://microdata.unhcr.org/index.php/auth/login/?destination=catalog/%s/get-microdata"

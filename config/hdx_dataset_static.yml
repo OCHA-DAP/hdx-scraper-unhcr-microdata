@@ -1,3 +1,4 @@
 license_id: "hdx-other"
-license_other: "The data must be requested via the resource download link."
+license_other: "Scientific Use License. See [terms of use](https://microdata.unhcr.org/index.php/terms-of-use) for details."
+caveats: "The data must be requested via the resource download link"
 private: False
