@@ -52,6 +52,18 @@ def generate_dataset(dataset_id, metadata_url, auth_url, documentation_url, down
     if collection is not None:
         methodology.append(f'Data Collection Mode: {collection}  \n')
     dataset_name = slugify(title_statement['idno'])
+    countryiso3s = set()
+    for nation in study_info['nation']:
+        countryiso3 = nation['abbreviation']
+        if not countryiso3:
+            countryname = nation['name']
+            if countryname:
+                countryiso3, _ = Country.get_iso3_country_code_fuzzy(countryname)
+        if countryiso3:
+            countryiso3s.add(countryiso3)
+    if len(countryiso3s) == 1:
+        countryname = Country.get_country_name_from_iso3(min(countryiso3s))
+        title = f'{countryname} - {title}'
     dataset = Dataset({
         'name': dataset_name,
         'title': title,
@@ -64,14 +76,7 @@ def generate_dataset(dataset_id, metadata_url, auth_url, documentation_url, down
     dataset.set_organization('abf4ca86-8e69-40b1-92f7-71509992be88')
     dataset.set_expected_update_frequency('Never')
     dataset.set_subnational(True)
-    for nation in study_info['nation']:
-        countryiso = nation['abbreviation']
-        if not countryiso:
-            countryname = nation['name']
-            if countryname:
-                countryiso, _ = Country.get_iso3_country_code_fuzzy(countryname)
-        if countryiso:
-            dataset.add_country_location(countryiso)
+    dataset.add_country_locations(countryiso3s)
     tags = list()
 
     def add_tags(inwords, key):
