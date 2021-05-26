@@ -23,7 +23,14 @@ def get_dataset_ids(catalog_url, downloader):
     json = response.json()
     if not json.get('found'):
         raise ValueError('No datasets found!')
-    return [{'id': x['id']} for x in json['result']]
+    dataset_ids = list()
+    for dataset in json['result']:
+        idno = dataset['idno']
+        if idno[:5] == 'UNHCR':
+            dataset_ids.append({'id': dataset['id']})
+        else:
+            logger.info(f'Ignoring external dataset: {idno}')
+    return dataset_ids
 
 
 def generate_dataset(dataset_id, metadata_url, auth_url, documentation_url, downloader):
