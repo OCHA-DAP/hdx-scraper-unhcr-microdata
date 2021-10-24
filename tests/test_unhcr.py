@@ -10,7 +10,6 @@ from hdx.hdx_configuration import Configuration
 from hdx.hdx_locations import Locations
 from hdx.location.country import Country
 from hdx.utilities.loader import load_json
-
 from unhcr import generate_dataset, get_dataset_ids
 
 dataset_ids_json = {
@@ -98,9 +97,7 @@ class TestUNHCR:
         ]
 
     def test_generate_dataset(self, configuration, downloader):
-        dataset = generate_dataset(
-            "187", configuration, downloader
-        )
+        dataset = generate_dataset("187", configuration, downloader)
         assert dataset == {
             "name": "unhcr-afg-2017-sea-khostpaktika-1-1",
             "title": "Afghanistan - Socio-economic assessment of Pakistani refugees in Afghanistan's Khost and Paktika provinces 2017",
@@ -161,9 +158,7 @@ class TestUNHCR:
             },
         ]
 
-        dataset = generate_dataset(
-            "272", configuration, downloader
-        )
+        dataset = generate_dataset("272", configuration, downloader)
         assert dataset == {
             "name": "unhcr-phl-2016-zamboanga-hb-idp-profiling",
             "title": "Philippines - Zamboanga Home Based IDP Re-Profiling 2016",

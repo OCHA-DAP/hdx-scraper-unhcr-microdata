@@ -11,7 +11,6 @@ from hdx.facades.keyword_arguments import facade
 from hdx.hdx_configuration import Configuration
 from hdx.utilities.downloader import Download
 from hdx.utilities.path import progress_storing_tempdir
-
 from unhcr import failures, generate_dataset, get_dataset_ids
 
 logger = logging.getLogger(__name__)
@@ -29,8 +28,9 @@ def main(output_failures=False, **ignore):
         for info, dataset_id in progress_storing_tempdir(
             "UNHCR-MICRODATA", dataset_ids, "id"
         ):
-            dataset = generate_dataset(dataset_id["id"], configuration, downloader,
-                                       output_failures)
+            dataset = generate_dataset(
+                dataset_id["id"], configuration, downloader, output_failures
+            )
             if dataset:
                 dataset.update_from_yaml()
                 dataset.create_in_hdx(
@@ -45,8 +45,13 @@ def main(output_failures=False, **ignore):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="UNHCR Microdata")
-    parser.add_argument("-of", "--output_failures", default=False, action="store_true",
-                        help="Output failures")
+    parser.add_argument(
+        "-of",
+        "--output_failures",
+        default=False,
+        action="store_true",
+        help="Output failures",
+    )
     args = parser.parse_args()
     facade(
         main,
