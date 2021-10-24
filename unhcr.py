@@ -9,6 +9,7 @@ Generates urls from the UNHCR microdata website.
 import logging
 
 from hdx.data.dataset import Dataset
+from hdx.data.hdxobject import HDXError
 from hdx.location.country import Country
 from hdx.utilities.dateparse import parse_date_range
 from slugify import slugify
@@ -16,8 +17,12 @@ from slugify import slugify
 logger = logging.getLogger(__name__)
 
 
-def get_dataset_ids(catalog_url, downloader):
-    response = downloader.download(f"{catalog_url}latest?limit=10000")
+failures = list()
+
+
+def get_dataset_ids(configuration, downloader):
+    url = f"{configuration['base_url']}{configuration['catalog_url']}"
+    response = downloader.download(f"{url}latest?limit=10000")
     json = response.json()
     if not json.get("found"):
         raise ValueError("No datasets found!")
@@ -31,8 +36,9 @@ def get_dataset_ids(catalog_url, downloader):
     return dataset_ids
 
 
-def generate_dataset(dataset_id, metadata_url, auth_url, documentation_url, downloader):
-    response = downloader.download(metadata_url % dataset_id)
+def generate_dataset(dataset_id, configuration, downloader, output_failures=False):
+    metadata_url = configuration["metadata_url"] % dataset_id
+    response = downloader.download(f"{configuration['base_url']}{metadata_url}")
     json = response.json()
     study_desc = json["study_desc"]
     title_statement = study_desc["title_statement"]
@@ -83,7 +89,16 @@ def generate_dataset(dataset_id, metadata_url, auth_url, documentation_url, down
     dataset.set_organization("abf4ca86-8e69-40b1-92f7-71509992be88")
     dataset.set_expected_update_frequency("Never")
     dataset.set_subnational(True)
-    dataset.add_country_locations(countryiso3s)
+    if output_failures:
+        try:
+            dataset.add_country_locations(countryiso3s)
+        except HDXError:
+            ui_url = configuration["ui_url"] % dataset_id
+            url = f"{configuration['base_url']}{ui_url}"
+            failures.append(f"Invalid country id {countryiso3s} in dataset {url}!")
+            return None
+    else:
+        dataset.add_country_locations(countryiso3s)
     tags = list()
 
     def add_tags(inwords, key):
@@ -119,18 +134,20 @@ def generate_dataset(dataset_id, metadata_url, auth_url, documentation_url, down
     _, enddate = parse_date_range(coll_dates["end"])
     dataset.set_date_of_dataset(startdate, enddate)
 
+    auth_url = configuration["auth_url"] % dataset_id
     resourcedata = {
         "name": title,
         "description": 'Clicking "Download" leads outside HDX where you can request access to the data in csv, xlsx & dta formats',
-        "url": auth_url % dataset_id,
+        "url": f"{configuration['base_url']}{auth_url}",
         "format": "web app",
     }
     dataset.add_update_resource(resourcedata)
 
+    documentation_url = configuration["documentation_url"] % dataset_id
     resourcedata = {
         "name": "Codebook",
         "description": "Contains information about the dataset's metadata and data",
-        "url": documentation_url % dataset_id,
+        "url": f"{configuration['base_url']}{documentation_url}",
         "format": "pdf",
     }
     dataset.add_update_resource(resourcedata)

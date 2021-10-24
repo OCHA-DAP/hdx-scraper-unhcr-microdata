@@ -92,18 +92,14 @@ class TestUNHCR:
         return Download()
 
     def test_get_datasetids(self, configuration, downloader):
-        catalog_url = configuration["catalog_url"]
-        assert get_dataset_ids(catalog_url, downloader) == [
+        assert get_dataset_ids(configuration, downloader) == [
             {"id": "187"},
             {"id": "272"},
         ]
 
     def test_generate_dataset(self, configuration, downloader):
-        metadata_url = configuration["metadata_url"]
-        documentation_url = configuration["documentation_url"]
-        auth_url = configuration["auth_url"]
         dataset = generate_dataset(
-            "187", metadata_url, auth_url, documentation_url, downloader
+            "187", configuration, downloader
         )
         assert dataset == {
             "name": "unhcr-afg-2017-sea-khostpaktika-1-1",
@@ -166,7 +162,7 @@ class TestUNHCR:
         ]
 
         dataset = generate_dataset(
-            "272", metadata_url, auth_url, documentation_url, downloader
+            "272", configuration, downloader
         )
         assert dataset == {
             "name": "unhcr-phl-2016-zamboanga-hb-idp-profiling",

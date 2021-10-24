@@ -1,5 +1,7 @@
 # Collector specific configuration
-catalog_url: "https://lala/index.php/api/catalog/"
-metadata_url: "https://lala/index.php/metadata/export/%s/json"
-documentation_url: "https://lala/index.php/catalog/%s/pdf-documentation"
-auth_url: "https://lala/index.php/auth/login/?destination=catalog/%s/get-microdata"
+base_url: "https://lala/index.php/"
+ui_url: "catalog/%s"
+catalog_url: "api/catalog/"
+metadata_url: "metadata/export/%s/json"
+documentation_url: "catalog/%s/pdf-documentation"
+auth_url: "auth/login/?destination=catalog/%s/get-microdata"
