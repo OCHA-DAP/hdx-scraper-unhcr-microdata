@@ -7,6 +7,7 @@ import argparse
 import logging
 from os.path import expanduser, join
 
+import defopt
 from hdx.facades.keyword_arguments import facade
 from hdx.hdx_configuration import Configuration
 from hdx.utilities.downloader import Download
@@ -19,8 +20,6 @@ lookup = "hdx-scraper-unhcr-microdata"
 
 
 def main(output_failures=False, **ignore):
-    """Generate dataset and create it in HDX"""
-
     configuration = Configuration.read()
     with Download() as downloader:
         dataset_ids = get_dataset_ids(configuration, downloader)
