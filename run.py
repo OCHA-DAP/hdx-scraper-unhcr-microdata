@@ -7,7 +7,6 @@ import argparse
 import logging
 from os.path import expanduser, join
 
-import defopt
 from hdx.facades.keyword_arguments import facade
 from hdx.hdx_configuration import Configuration
 from hdx.utilities.downloader import Download
