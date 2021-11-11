@@ -8,7 +8,7 @@ import logging
 from os.path import expanduser, join
 
 from hdx.facades.keyword_arguments import facade
-from hdx.hdx_configuration import Configuration
+from hdx.api.configuration import Configuration
 from hdx.utilities.downloader import Download
 from hdx.utilities.path import progress_storing_tempdir
 from unhcr import failures, generate_dataset, get_dataset_ids
