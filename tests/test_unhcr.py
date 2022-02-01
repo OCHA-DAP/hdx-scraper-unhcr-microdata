@@ -10,7 +10,7 @@ from hdx.api.configuration import Configuration
 from hdx.api.locations import Locations
 from hdx.location.country import Country
 from hdx.utilities.loader import load_json
-from unhcr import generate_dataset, get_dataset_ids
+from unhcr import UNHCR
 
 dataset_ids_json = {
     "limit": 10000,
@@ -90,14 +90,18 @@ class TestUNHCR:
 
         return Download()
 
-    def test_get_datasetids(self, configuration, downloader):
-        assert get_dataset_ids(configuration, downloader) == [
+    @pytest.fixture(scope="function")
+    def unhcr(self, configuration, downloader):
+        return UNHCR(configuration, downloader, None)
+
+    def test_get_datasetids(self, unhcr):
+        assert unhcr.get_dataset_ids() == [
             {"id": "187"},
             {"id": "272"},
         ]
 
-    def test_generate_dataset(self, configuration, downloader):
-        dataset = generate_dataset("187", configuration, downloader)
+    def test_generate_dataset(self, unhcr):
+        dataset = unhcr.generate_dataset("187")
         assert dataset == {
             "name": "unhcr-afg-2017-sea-khostpaktika-1-1",
             "title": "Afghanistan - Socio-economic assessment of Pakistani refugees in Afghanistan's Khost and Paktika provinces 2017",
@@ -158,7 +162,7 @@ class TestUNHCR:
             },
         ]
 
-        dataset = generate_dataset("272", configuration, downloader)
+        dataset = unhcr.generate_dataset("272")
         assert dataset == {
             "name": "unhcr-phl-2016-zamboanga-hb-idp-profiling",
             "title": "Philippines - Zamboanga Home Based IDP Re-Profiling 2016",
