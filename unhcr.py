@@ -18,10 +18,9 @@ logger = logging.getLogger(__name__)
 
 
 class UNHCR:
-    def __init__(self, configuration, downloader, errors):
+    def __init__(self, configuration, downloader):
         self.configuration = configuration
         self.downloader = downloader
-        self.errors = errors
 
     def get_url(self, dataset_id):
         ui_url = self.configuration["ui_url"] % dataset_id
@@ -99,7 +98,7 @@ class UNHCR:
             dataset.add_country_locations(countryiso3s)
         except HDXError:
             url = self.get_url(dataset_id)
-            self.errors.add(f"Invalid country id {countryiso3s} in dataset {url}!")
+            logging.errors_on_exit.add(f"Invalid country id {countryiso3s} in dataset {url}!")
             return None
         tags = list()
 

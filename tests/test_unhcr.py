@@ -92,7 +92,7 @@ class TestUNHCR:
 
     @pytest.fixture(scope="function")
     def unhcr(self, configuration, downloader):
-        return UNHCR(configuration, downloader, None)
+        return UNHCR(configuration, downloader)
 
     def test_get_datasetids(self, unhcr):
         assert unhcr.get_dataset_ids() == [

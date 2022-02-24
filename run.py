@@ -23,7 +23,7 @@ def main():
     configuration = Configuration.read()
     with ErrorsOnExit() as errors:
         with Download() as downloader:
-            unhcr = UNHCR(configuration, downloader, errors)
+            unhcr = UNHCR(configuration, downloader)
             dataset_ids = unhcr.get_dataset_ids()
             logger.info(f"Number of datasets to upload: {len(dataset_ids)}")
             for info, dataset_id_dict in progress_storing_tempdir(
