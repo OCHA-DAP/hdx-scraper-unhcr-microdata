@@ -22,7 +22,7 @@ lookup = "hdx-scraper-unhcr-microdata"
 def main():
     configuration = Configuration.read()
     with ErrorsOnExit() as errors:
-        with Download(rate_limit={"calls": 1, "period": 0.1}) as downloader:
+        with Download(rate_limit={"calls": 1, "period": 1}) as downloader:
             unhcr = UNHCR(configuration, downloader)
             dataset_ids = unhcr.get_dataset_ids()
             logger.info(f"Number of datasets to upload: {len(dataset_ids)}")
