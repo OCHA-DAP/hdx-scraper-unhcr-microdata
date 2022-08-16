@@ -140,7 +140,7 @@ class TestUNHCR:
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
             ],
-            "dataset_date": "[2017-05-11T00:00:00 TO 2017-05-29T00:00:00]",
+            "dataset_date": "[2017-05-11T00:00:00 TO 2017-05-29T23:59:59]",
         }
         resources = dataset.get_resources()
         assert resources == [
@@ -209,7 +209,7 @@ class TestUNHCR:
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
             ],
-            "dataset_date": "[2016-07-01T00:00:00 TO 2016-08-31T00:00:00]",
+            "dataset_date": "[2016-07-01T00:00:00 TO 2016-08-31T23:59:59]",
         }
         resources = dataset.get_resources()
         assert resources == [
