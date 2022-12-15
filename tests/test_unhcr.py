@@ -136,7 +136,7 @@ class TestUNHCR:
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
                 {
-                    "name": "violence and conflict",
+                    "name": "conflict-violence",
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
             ],
@@ -177,15 +177,15 @@ class TestUNHCR:
             "groups": [{"name": "phl"}],
             "tags": [
                 {
-                    "name": "vulnerable populations",
+                    "name": "protection",
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
                 {
-                    "name": "displaced persons locations - camps - shelters",
+                    "name": "settlements",
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
                 {
-                    "name": "non-food items - nfi",
+                    "name": "non-food items-nfi",
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
                 {
@@ -193,7 +193,7 @@ class TestUNHCR:
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
                 {
-                    "name": "gender-based violence - gbv",
+                    "name": "gender-based violence-gbv",
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
                 {
@@ -202,6 +202,10 @@ class TestUNHCR:
                 },
                 {
                     "name": "housing",
+                    "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
+                },
+                {
+                    "name": "infrastructure-facilities",
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
                 {
