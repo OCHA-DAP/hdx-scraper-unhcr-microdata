@@ -44,8 +44,8 @@ class UNHCR:
 
     def generate_dataset(self, dataset_id, errors):
         metadata_url = self.configuration["metadata_url"] % dataset_id
-        url = f"{self.configuration['base_url']}{metadata_url}"
-        response = self.downloader.download(url)
+        json_url = f"{self.configuration['base_url']}{metadata_url}"
+        response = self.downloader.download(json_url)
         json = response.json()
         study_desc = json["study_desc"]
         title_statement = study_desc["title_statement"]
@@ -96,11 +96,11 @@ class UNHCR:
         dataset.set_organization("abf4ca86-8e69-40b1-92f7-71509992be88")
         dataset.set_expected_update_frequency("Never")
         dataset.set_subnational(True)
-        hdx_url = self.get_url(dataset_id)
+        ui_url = self.get_url(dataset_id)
         try:
             dataset.add_country_locations(countryiso3s)
         except HDXError:
-            errors.add(f"Invalid country id {countryiso3s} in {url}: {title}. (HDX dataset {hdx_url})!")
+            errors.add(f"Invalid country id {countryiso3s} in {ui_url}: {title}. ( JSON url {json_url} )!")
             return None
         tags = list()
 
@@ -137,7 +137,7 @@ class UNHCR:
             startdate, _ = parse_date_range(coll_dates["start"])
             _, enddate = parse_date_range(coll_dates["end"])
         except ParserError:
-            errors.add(f"Invalid date(s) in {url}: {title}. (HDX dataset {hdx_url})!")
+            errors.add(f"Invalid date(s) in {ui_url}: {title}. ( JSON url {json_url} )!")
             return None
         dataset.set_reference_period(startdate, enddate)
 
