@@ -30,7 +30,7 @@ def main():
                 "UNHCR-MICRODATA", dataset_ids, "id"
             ):
                 dataset_id = dataset_id_dict["id"]
-                dataset = unhcr.generate_dataset(dataset_id)
+                dataset = unhcr.generate_dataset(dataset_id, errors)
                 if dataset:
                     dataset.update_from_yaml()
                     try:

@@ -8,6 +8,7 @@ Generates urls from the UNHCR microdata website.
 """
 import logging
 
+from dateutil.parser import ParserError
 from hdx.data.dataset import Dataset
 from hdx.data.hdxobject import HDXError
 from hdx.location.country import Country
@@ -41,9 +42,10 @@ class UNHCR:
                 logger.info(f"Ignoring external dataset: {idno}")
         return dataset_ids
 
-    def generate_dataset(self, dataset_id):
+    def generate_dataset(self, dataset_id, errors):
         metadata_url = self.configuration["metadata_url"] % dataset_id
-        response = self.downloader.download(f"{self.configuration['base_url']}{metadata_url}")
+        url = f"{self.configuration['base_url']}{metadata_url}"
+        response = self.downloader.download(url)
         json = response.json()
         study_desc = json["study_desc"]
         title_statement = study_desc["title_statement"]
@@ -94,11 +96,11 @@ class UNHCR:
         dataset.set_organization("abf4ca86-8e69-40b1-92f7-71509992be88")
         dataset.set_expected_update_frequency("Never")
         dataset.set_subnational(True)
+        hdx_url = self.get_url(dataset_id)
         try:
             dataset.add_country_locations(countryiso3s)
         except HDXError:
-            url = self.get_url(dataset_id)
-            logging.errors_on_exit.add(f"Invalid country id {countryiso3s} in dataset {url}!")
+            errors.add(f"Invalid country id {countryiso3s} in {url}: {title}. (HDX dataset {hdx_url})!")
             return None
         tags = list()
 
@@ -131,9 +133,13 @@ class UNHCR:
         dataset.add_tags(tags)
         dataset.clean_tags()
         coll_dates = study_info["coll_dates"][0]
-        startdate, _ = parse_date_range(coll_dates["start"])
-        _, enddate = parse_date_range(coll_dates["end"])
-        dataset.set_date_of_dataset(startdate, enddate)
+        try:
+            startdate, _ = parse_date_range(coll_dates["start"])
+            _, enddate = parse_date_range(coll_dates["end"])
+        except ParserError:
+            errors.add(f"Invalid date(s) in {url}: {title}. (HDX dataset {hdx_url})!")
+            return None
+        dataset.set_reference_period(startdate, enddate)
 
         auth_url = self.configuration["auth_url"] % dataset_id
         resourcedata = {

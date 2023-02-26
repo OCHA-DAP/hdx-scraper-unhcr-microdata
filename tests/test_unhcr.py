@@ -101,7 +101,7 @@ class TestUNHCR:
         ]
 
     def test_generate_dataset(self, unhcr):
-        dataset = unhcr.generate_dataset("187")
+        dataset = unhcr.generate_dataset("187", None)
         assert dataset == {
             "name": "unhcr-afg-2017-sea-khostpaktika-1-1",
             "title": "Afghanistan - Socio-economic assessment of Pakistani refugees in Afghanistan's Khost and Paktika provinces 2017",
@@ -162,7 +162,7 @@ class TestUNHCR:
             },
         ]
 
-        dataset = unhcr.generate_dataset("272")
+        dataset = unhcr.generate_dataset("272", None)
         assert dataset == {
             "name": "unhcr-phl-2016-zamboanga-hb-idp-profiling",
             "title": "Philippines - Zamboanga Home Based IDP Re-Profiling 2016",
