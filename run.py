@@ -5,6 +5,7 @@ Top level script. Calls other functions that generate datasets that this script 
 """
 import logging
 from os.path import expanduser, join
+from traceback import format_exc
 
 from hdx.data.hdxobject import HDXError
 from hdx.facades.simple import facade
@@ -40,9 +41,9 @@ def main():
                             updated_by_script="HDX Scraper: UNHCR microdata",
                             batch=info["batch"],
                         )
-                    except HDXError as ex:
+                    except HDXError:
                         url = unhcr.get_url(dataset_id)
-                        errors.add(f"Dataset: {url}, error: {ex}")
+                        errors.add(f"Dataset: {url}, error: {format_exc()}")
 
 
 if __name__ == "__main__":
