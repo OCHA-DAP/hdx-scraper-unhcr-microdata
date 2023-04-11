@@ -43,6 +43,7 @@ def main():
                         )
                     except HDXError:
                         url = unhcr.get_url(dataset_id)
+                        logger.exception(f"Error with dataset: {url}!")
                         errors.add(f"Dataset: {url}, error: {format_exc()}")
 
 
