@@ -132,7 +132,7 @@ class TestUNHCR:
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
                 {
-                    "name": "displacement",
+                    "name": "forced displacement",
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
                 {
@@ -181,7 +181,7 @@ class TestUNHCR:
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
                 {
-                    "name": "settlements",
+                    "name": "populated places-settlements",
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
                 {
@@ -197,15 +197,11 @@ class TestUNHCR:
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
                 {
-                    "name": "mental health",
+                    "name": "health",
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
                 {
-                    "name": "housing",
-                    "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
-                },
-                {
-                    "name": "infrastructure-facilities",
+                    "name": "facilities-infrastructure",
                     "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                 },
                 {
