@@ -11,6 +11,7 @@ import logging
 from dateutil.parser import ParserError
 from hdx.data.dataset import Dataset
 from hdx.data.hdxobject import HDXError
+from hdx.data.resource import Resource
 from hdx.location.country import Country
 from hdx.utilities.dateparse import parse_date_range
 from slugify import slugify
@@ -23,27 +24,30 @@ class UNHCR:
         self.configuration = configuration
         self.downloader = downloader
 
-    def get_url(self, dataset_id):
-        ui_url = self.configuration["ui_url"] % dataset_id
-        return f"{self.configuration['base_url']}{ui_url}"
-
-    def get_dataset_ids(self):
+    def get_dataset_info(self):
         url = f"{self.configuration['base_url']}{self.configuration['catalog_url']}"
         response = self.downloader.download(f"{url}latest?limit=10000")
         json = response.json()
         if not json.get("found"):
             raise ValueError("No datasets found!")
-        dataset_ids = list()
+        dataset_info = list()
         for dataset in json["result"]:
             idno = dataset["idno"]
             if idno[:5] == "UNHCR":
-                dataset_ids.append({"id": dataset["id"]})
+                dataset_info.append(
+                    {
+                        "id": dataset["id"],
+                        "changed": dataset["changed"],
+                        "url": dataset["url"],
+                    }
+                )
             else:
                 logger.info(f"Ignoring external dataset: {idno}")
-        return dataset_ids
+        return dataset_info
 
-    def generate_dataset(self, dataset_id, errors):
-        metadata_url = self.configuration["metadata_url"] % dataset_id
+    def generate_dataset(self, dataset_info, errors):
+        dataset_id = dataset_info["id"]
+        metadata_url = self.configuration["metadata_url"].format(dataset_id)
         json_url = f"{self.configuration['base_url']}{metadata_url}"
         response = self.downloader.download(json_url)
         json = response.json()
@@ -96,11 +100,13 @@ class UNHCR:
         dataset.set_organization("abf4ca86-8e69-40b1-92f7-71509992be88")
         dataset.set_expected_update_frequency("Never")
         dataset.set_subnational(True)
-        ui_url = self.get_url(dataset_id)
+        ui_url = dataset_info["url"]
         try:
             dataset.add_country_locations(countryiso3s)
         except HDXError:
-            errors.add(f"Invalid country id {countryiso3s} in {ui_url}: {title}. ( JSON url {json_url} )!")
+            errors.add(
+                f"Invalid country id {countryiso3s} in {ui_url}: {title}. ( JSON url {json_url} )!"
+            )
             return None
         tags = list()
 
@@ -137,26 +143,35 @@ class UNHCR:
             startdate, _ = parse_date_range(coll_dates["start"])
             _, enddate = parse_date_range(coll_dates["end"])
         except ParserError:
-            errors.add(f"Invalid date(s) in {ui_url}: {title}. ( JSON url {json_url} )!")
+            errors.add(
+                f"Invalid date(s) in {ui_url}: {title}. ( JSON url {json_url} )!"
+            )
             return None
         dataset.set_reference_period(startdate, enddate)
 
-        auth_url = self.configuration["auth_url"] % dataset_id
-        resourcedata = {
-            "name": title,
-            "description": 'Clicking "Download" leads outside HDX where you can request access to the data in csv, xlsx & dta formats',
-            "url": f"{self.configuration['base_url']}{auth_url}",
-            "format": "web app",
-        }
-        dataset.add_update_resource(resourcedata)
+        auth_url = self.configuration["auth_url"].format(dataset_id)
+        resource = Resource(
+            {
+                "name": title,
+                "description": 'Clicking "Download" leads outside HDX where you can request access to the data in csv, xlsx & dta formats',
+                "url": f"{self.configuration['base_url']}{auth_url}",
+                "format": "web app",
+            }
+        )
+        changed = dataset_info["changed"]
+        resource.set_date_data_updated(changed)
+        dataset.add_update_resource(resource)
 
-        documentation_url = self.configuration["documentation_url"] % dataset_id
-        resourcedata = {
-            "name": "Codebook",
-            "description": "Contains information about the dataset's metadata and data",
-            "url": f"{self.configuration['base_url']}{documentation_url}",
-            "format": "pdf",
-        }
-        dataset.add_update_resource(resourcedata)
+        documentation_url = self.configuration["documentation_url"].format(dataset_id)
+        resource = Resource(
+            {
+                "name": "Codebook",
+                "description": "Contains information about the dataset's metadata and data",
+                "url": f"{self.configuration['base_url']}{documentation_url}",
+                "format": "pdf",
+            }
+        )
+        resource.set_date_data_updated(changed)
+        dataset.add_update_resource(resource)
 
         return dataset

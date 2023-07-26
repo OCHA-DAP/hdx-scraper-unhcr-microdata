@@ -7,9 +7,9 @@ import logging
 from os.path import expanduser, join
 from traceback import format_exc
 
+from hdx.api.configuration import Configuration
 from hdx.data.hdxobject import HDXError
 from hdx.facades.simple import facade
-from hdx.api.configuration import Configuration
 from hdx.utilities.downloader import Download
 from hdx.utilities.errors_onexit import ErrorsOnExit
 from hdx.utilities.path import progress_storing_tempdir
@@ -25,13 +25,12 @@ def main():
     with ErrorsOnExit() as errors:
         with Download(rate_limit={"calls": 1, "period": 5}) as downloader:
             unhcr = UNHCR(configuration, downloader)
-            dataset_ids = unhcr.get_dataset_ids()
+            dataset_ids = unhcr.get_dataset_info()
             logger.info(f"Number of datasets to upload: {len(dataset_ids)}")
-            for info, dataset_id_dict in progress_storing_tempdir(
+            for info, dataset_info in progress_storing_tempdir(
                 "UNHCR-MICRODATA", dataset_ids, "id"
             ):
-                dataset_id = dataset_id_dict["id"]
-                dataset = unhcr.generate_dataset(dataset_id, errors)
+                dataset = unhcr.generate_dataset(dataset_info, errors)
                 if dataset:
                     dataset.update_from_yaml()
                     try:
@@ -42,7 +41,7 @@ def main():
                             batch=info["batch"],
                         )
                     except HDXError:
-                        url = unhcr.get_url(dataset_id)
+                        url = dataset_info["url"]
                         logger.exception(f"Error with dataset: {url}!")
                         errors.add(f"Dataset: {url}, error: {format_exc()}")
 

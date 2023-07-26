@@ -1,7 +1,6 @@
 # Collector specific configuration
 base_url: "https://microdata.unhcr.org/index.php/"
-ui_url: "catalog/%s"
 catalog_url: "api/catalog/"
-metadata_url: "metadata/export/%s/json"
-documentation_url: "catalog/%s/pdf-documentation"
-auth_url: "auth/login/?destination=catalog/%s/get-microdata"
+metadata_url: "metadata/export/{}/json"
+documentation_url: "catalog/{}/pdf-documentation"
+auth_url: "auth/login/?destination=catalog/{}/get-microdata"

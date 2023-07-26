@@ -94,14 +94,29 @@ class TestUNHCR:
     def unhcr(self, configuration, downloader):
         return UNHCR(configuration, downloader)
 
-    def test_get_datasetids(self, unhcr):
-        assert unhcr.get_dataset_ids() == [
-            {"id": "187"},
-            {"id": "272"},
+    def test_get_dataset_info(self, unhcr):
+        assert unhcr.get_dataset_info() == [
+            {
+                "changed": "Dec-05-2019",
+                "id": "187",
+                "url": "https://microdata.unhcr.org/index.php/catalog/187",
+            },
+            {
+                "changed": "Sep-28-2020",
+                "id": "272",
+                "url": "https://microdata.unhcr.org/index.php/catalog/272",
+            },
         ]
 
     def test_generate_dataset(self, unhcr):
-        dataset = unhcr.generate_dataset("187", None)
+        dataset = unhcr.generate_dataset(
+            {
+                "changed": "Dec-05-2019",
+                "id": "187",
+                "url": "https://microdata.unhcr.org/index.php/catalog/187",
+            },
+            None,
+        )
         assert dataset == {
             "name": "unhcr-afg-2017-sea-khostpaktika-1-1",
             "title": "Afghanistan - Socio-economic assessment of Pakistani refugees in Afghanistan's Khost and Paktika provinces 2017",
@@ -149,6 +164,7 @@ class TestUNHCR:
                 "description": 'Clicking "Download" leads outside HDX where you can request access to the data in csv, xlsx & dta formats',
                 "url": "https://lala/index.php/auth/login/?destination=catalog/187/get-microdata",
                 "format": "web app",
+                "last_modified": "2019-12-05T00:00:00",
                 "resource_type": "api",
                 "url_type": "api",
             },
@@ -157,12 +173,20 @@ class TestUNHCR:
                 "description": "Contains information about the dataset's metadata and data",
                 "url": "https://lala/index.php/catalog/187/pdf-documentation",
                 "format": "pdf",
+                "last_modified": "2019-12-05T00:00:00",
                 "resource_type": "api",
                 "url_type": "api",
             },
         ]
 
-        dataset = unhcr.generate_dataset("272", None)
+        dataset = unhcr.generate_dataset(
+            {
+                "changed": "Sep-28-2020",
+                "id": "272",
+                "url": "https://microdata.unhcr.org/index.php/catalog/272",
+            },
+            None,
+        )
         assert dataset == {
             "name": "unhcr-phl-2016-zamboanga-hb-idp-profiling",
             "title": "Philippines - Zamboanga Home Based IDP Re-Profiling 2016",
@@ -218,6 +242,7 @@ class TestUNHCR:
                 "description": 'Clicking "Download" leads outside HDX where you can request access to the data in csv, xlsx & dta formats',
                 "url": "https://lala/index.php/auth/login/?destination=catalog/272/get-microdata",
                 "format": "web app",
+                "last_modified": "2020-09-28T00:00:00",
                 "resource_type": "api",
                 "url_type": "api",
             },
@@ -226,6 +251,7 @@ class TestUNHCR:
                 "description": "Contains information about the dataset's metadata and data",
                 "url": "https://lala/index.php/catalog/272/pdf-documentation",
                 "format": "pdf",
+                "last_modified": "2020-09-28T00:00:00",
                 "resource_type": "api",
                 "url_type": "api",
             },
