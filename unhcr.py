@@ -147,7 +147,7 @@ class UNHCR:
                 f"Invalid date(s) in {ui_url}: {title}. ( JSON url {json_url} )!"
             )
             return None
-        dataset.set_reference_period(startdate, enddate)
+        dataset.set_time_period(startdate, enddate)
 
         auth_url = self.configuration["auth_url"].format(dataset_id)
         resource = Resource(
