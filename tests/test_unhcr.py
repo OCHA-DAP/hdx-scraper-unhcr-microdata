@@ -3,14 +3,16 @@
 Unit tests for UNHCR microdata.
 
 """
+
 from os.path import join
 
 import pytest
+
 from hdx.api.configuration import Configuration
 from hdx.api.locations import Locations
 from hdx.location.country import Country
+from hdx.scraper.unhcr.microdata.pipeline import Pipeline
 from hdx.utilities.loader import load_json
-from unhcr import UNHCR
 
 dataset_ids_json = {
     "limit": 10000,
@@ -92,7 +94,7 @@ class TestUNHCR:
 
     @pytest.fixture(scope="function")
     def unhcr(self, configuration, downloader):
-        return UNHCR(configuration, downloader)
+        return Pipeline(configuration, downloader)
 
     def test_get_dataset_info(self, unhcr):
         assert unhcr.get_dataset_info() == [
@@ -165,8 +167,6 @@ class TestUNHCR:
                 "url": "https://lala/index.php/auth/login/?destination=catalog/187/get-microdata",
                 "format": "web app",
                 "last_modified": "2019-12-05T00:00:00.000000",
-                "resource_type": "api",
-                "url_type": "api",
             },
             {
                 "name": "Codebook",
@@ -174,8 +174,6 @@ class TestUNHCR:
                 "url": "https://lala/index.php/catalog/187/pdf-documentation",
                 "format": "pdf",
                 "last_modified": "2019-12-05T00:00:00.000000",
-                "resource_type": "api",
-                "url_type": "api",
             },
         ]
 
@@ -243,8 +241,6 @@ class TestUNHCR:
                 "url": "https://lala/index.php/auth/login/?destination=catalog/272/get-microdata",
                 "format": "web app",
                 "last_modified": "2020-09-28T00:00:00.000000",
-                "resource_type": "api",
-                "url_type": "api",
             },
             {
                 "name": "Codebook",
@@ -252,7 +248,5 @@ class TestUNHCR:
                 "url": "https://lala/index.php/catalog/272/pdf-documentation",
                 "format": "pdf",
                 "last_modified": "2020-09-28T00:00:00.000000",
-                "resource_type": "api",
-                "url_type": "api",
             },
         ]

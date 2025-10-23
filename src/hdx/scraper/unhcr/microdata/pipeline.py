@@ -6,20 +6,22 @@ UNHCR:
 Generates urls from the UNHCR microdata website.
 
 """
+
 import logging
 
 from dateutil.parser import ParserError
+from slugify import slugify
+
 from hdx.data.dataset import Dataset
 from hdx.data.hdxobject import HDXError
 from hdx.data.resource import Resource
 from hdx.location.country import Country
 from hdx.utilities.dateparse import parse_date_range
-from slugify import slugify
 
 logger = logging.getLogger(__name__)
 
 
-class UNHCR:
+class Pipeline:
     def __init__(self, configuration, downloader):
         self.configuration = configuration
         self.downloader = downloader
