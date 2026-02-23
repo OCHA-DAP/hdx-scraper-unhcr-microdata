@@ -47,7 +47,6 @@ def main():
                     try:
                         dataset.create_in_hdx(
                             remove_additional_resources=True,
-                            hxl_update=False,
                             updated_by_script="HDX Scraper: UNHCR microdata",
                             batch=info["batch"],
                         )
