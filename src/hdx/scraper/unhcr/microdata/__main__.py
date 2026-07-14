@@ -12,11 +12,12 @@ from hdx.api.configuration import Configuration
 from hdx.data.hdxobject import HDXError
 from hdx.data.user import User
 from hdx.facades.simple import facade
-from hdx.scraper.unhcr.microdata._version import __version__
-from hdx.scraper.unhcr.microdata.pipeline import Pipeline
 from hdx.utilities.downloader import Download
 from hdx.utilities.errors_onexit import ErrorsOnExit
 from hdx.utilities.path import progress_storing_tempdir, script_dir_plus_file
+
+from hdx.scraper.unhcr.microdata._version import __version__
+from hdx.scraper.unhcr.microdata.pipeline import Pipeline
 
 logger = logging.getLogger(__name__)
 

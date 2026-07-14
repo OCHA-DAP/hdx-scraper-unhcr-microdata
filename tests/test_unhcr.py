@@ -7,12 +7,12 @@ Unit tests for UNHCR microdata.
 from os.path import join
 
 import pytest
-
 from hdx.api.configuration import Configuration
 from hdx.api.locations import Locations
 from hdx.location.country import Country
-from hdx.scraper.unhcr.microdata.pipeline import Pipeline
 from hdx.utilities.loader import load_json
+
+from hdx.scraper.unhcr.microdata.pipeline import Pipeline
 
 dataset_ids_json = {
     "limit": 10000,

@@ -2,31 +2,123 @@
 # Project Configuration #
 #########################
 
+# Project name and version needed to run tests
+
 [build-system]
 requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
-name = "hdx-scraper-idmc-idu"
-requires-python = ">=3.8"
+name = "hdx-scraper-unhcr-microdata"
+dynamic = ["version"]
+requires-python = ">=3.13"
 dependencies = [
   "hdx-python-api>= 6.5.4",
   "hdx-python-country>= 3.9.8",
   "hdx-python-utilities>= 3.9.5",
 ]
-
-dynamic = ["version"]
-
-[project.readme]
-file = "README.md"
-content-type = "text/markdown"
+readme = "README.md"
 
 [project.urls]
 Homepage = "https://github.com/OCHA-DAP/hdx-scraper-unhcr-microdata"
+Repository = "https://github.com/OCHA-DAP/hdx-scraper-unhcr-microdata"
+Issues = "https://github.com/OCHA-DAP/hdx-scraper-unhcr-microdata/issues"
 
-[project.optional-dependencies]
-test = ["cydifflib", "pytest", "pytest-check", "pytest-cov"]
-dev = ["pre-commit"]
+[dependency-groups]
+dev = [
+  "pytest",
+  "pytest-cov",
+  "pre-commit",
+  "ruff==0.14.14",
+]
 
 [project.scripts]
-run = "hdx.scraper.unhcr.microdata__main__:main"
+run = "hdx.scraper.unhcr.microdata.__main__:main"
+
+# ----------------------------------------------------------------------------
+# Hatchling (Build & Versioning)
+# ----------------------------------------------------------------------------
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.version.raw-options]
+local_scheme = "no-local-version"
+version_scheme = "python-simplified-semver"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/hdx/scraper/unhcr/microdata/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hdx"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+# ----------------------------------------------------------------------------
+# Ruff (Linting & Formatting)
+# ----------------------------------------------------------------------------
+
+[tool.ruff]
+target-version = "py313"
+src = ["src"]
+exclude = ["_version.py"]
+
+[tool.ruff.lint]
+# Defaults are E (pycodestyle) and F (pyflakes). We extend them:
+extend-select = [
+  "I",   # isort
+  "UP",  # pyupgrade
+]
+ignore = [
+    "E501", # Line too long
+]
+
+[tool.ruff.lint.isort]
+known-local-folder = ["hdx.scraper.unhcr.microdata"]
+known-third-party = [
+    "hdx.api",
+    "hdx.data",
+    "hdx.location",
+    "hdx.facades",
+    "hdx.utilities",
+]
+
+# ----------------------------------------------------------------------------
+# Pytest (Testing)
+# ----------------------------------------------------------------------------
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+log_cli = true
+addopts = """
+    --color=yes
+    --rootdir=.
+    --junitxml=test-results.xml
+    --cov
+    --no-cov-on-fail
+    --cov-report=lcov
+    --cov-report=term-missing
+"""
+
+# ----------------------------------------------------------------------------
+# Coverage (Reporting)
+# ----------------------------------------------------------------------------
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/_version.py"]
+
+[tool.coverage.report]
+exclude_also = [
+    "from ._version",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@(abc\\.)?abstractmethod",
+]
